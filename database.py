@@ -9,7 +9,10 @@ def create_database():
     c.execute(''' CREATE TABLE IF NOT EXISTS notes ( id INTEGER PRIMARY KEY, title TEXT, content TEXT, date_created TEXT, type TEXT DEFAULT 'note' ) ''')
     
     # Таблица персонажей
-    c.execute(''' CREATE TABLE IF NOT EXISTS characters ( id INTEGER PRIMARY KEY, name TEXT UNIQUE, info TEXT ) ''')
+    c.execute(''' CREATE TABLE IF NOT EXISTS characters ( id INTEGER PRIMARY KEY, name TEXT UNIQUE, description TEXT, talent_materials TEXT, recommended_artifacts TEXT, recommended_weapon TEXT ) ''')
+    
+    # Таблица для пунктов списка
+    c.execute(''' CREATE TABLE IF NOT EXISTS list_items ( id INTEGER PRIMARY KEY, parent_note_id INTEGER, text TEXT, completed BOOLEAN DEFAULT FALSE, FOREIGN KEY(parent_note_id) REFERENCES notes(id) ) ''')
     
     conn.commit()
     conn.close()
@@ -28,6 +31,53 @@ def get_all_notes():
     c = conn.cursor()
     c.execute("SELECT * FROM notes ORDER BY date_created DESC")
     return c.fetchall()
+
+def get_all_characters():
+    conn = sqlite3.connect('genshin.db')
+    c = conn.cursor()
+    c.execute("SELECT * FROM characters")
+    results = c.fetchall()
+    conn.close()
+    return results
+
+# --- Новые функции ---
+
+def mark_completed(item_id, completed):
+    conn = sqlite3.connect('genshin.db')
+    c = conn.cursor()
+    c.execute("UPDATE list_items SET completed=? WHERE id=?", (completed, item_id))
+    conn.commit()
+    conn.close()
+
+def get_list_items(note_id):
+    conn = sqlite3.connect('genshin.db')
+    c = conn.cursor()
+    c.execute("SELECT id, text, completed FROM list_items WHERE parent_note_id=?", (note_id,))
+    results = c.fetchall()
+    conn.close()
+    return results
+
+def insert_list_item(parent_note_id, text):
+    conn = sqlite3.connect('genshin.db')
+    c = conn.cursor()
+    c.execute("INSERT INTO list_items (parent_note_id, text) VALUES (?, ?)", (parent_note_id, text))
+    conn.commit()
+    conn.close()
+
+def delete_note(note_id):
+    conn = sqlite3.connect('genshin.db')
+    c = conn.cursor()
+    c.execute("DELETE FROM notes WHERE id=?", (note_id,))
+    conn.commit()
+    conn.close()
+
+def insert_character(name, description, talent_materials, recommended_artifacts, recommended_weapon):
+    conn = sqlite3.connect('genshin.db')
+    c = conn.cursor()
+    c.execute("INSERT INTO characters (name, description, talent_materials, recommended_artifacts, recommended_weapon) VALUES (?, ?, ?, ?, ?)",
+              (name, description, talent_materials, recommended_artifacts, recommended_weapon))
+    conn.commit()
+    conn.close()
 
 # Инициализация базы данных
 create_database()
