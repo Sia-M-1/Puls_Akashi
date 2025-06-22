@@ -248,15 +248,25 @@ class CharacterDetailsDialog(QDialog):
         layout = QVBoxLayout()
         title_label = QLabel(f"<h2>{character_data[1]}</h2>")  # Имя персонажа
         description_label = QLabel(f"Описание: {character_data[2]}")  # Описание
-        materials_label = QLabel(f"Материалы талантов: {character_data[3]}")  # Материалы
-        artifacts_label = QLabel(f"Рекомендуемые артефакты: {character_data[4]}")  # Артефакты
-        weapon_label = QLabel(f"Рекомендуемое оружие: {character_data[5]}")  # Оружие
+        rarity_label = QLabel(f"Редкость: {character_data[3]}")  # Редкость
+        element_label = QLabel(f"Элемент: {character_data[4]}")  # Элемент
+        birthday_label = QLabel(f"День рождения.: {character_data[5]}")  # День рождения
+        constellation_label = QLabel(f"Созвездие: {character_data[6]}")  # Созвездие
+        region_label = QLabel(f"Регион: {character_data[7]}")  # Регион
+        type_weapon_label = QLabel(f"Тип оружия: {character_data[8]}")  # Тип оружия
+        artifacts_label = QLabel(f"Рекомендуемые артефакты: {character_data[9]}")  # Рекомендуемые артефакты
+        weapon_label = QLabel(f"Рекомендуемое оружие: {character_data[10]}")  # Рекомендованное оружие
         close_button = QPushButton("Закрыть")
         close_button.clicked.connect(self.accept)
         
         layout.addWidget(title_label)
         layout.addWidget(description_label)
-        layout.addWidget(materials_label)
+        layout.addWidget(rarity_label)
+        layout.addWidget(element_label)
+        layout.addWidget(birthday_label)
+        layout.addWidget(constellation_label)
+        layout.addWidget(region_label)
+        layout.addWidget(type_weapon_label)
         layout.addWidget(artifacts_label)
         layout.addWidget(weapon_label)
         layout.addWidget(close_button)
