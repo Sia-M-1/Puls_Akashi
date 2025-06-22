@@ -6,13 +6,34 @@ def create_database():
     c = conn.cursor()
     
     # Таблица заметок
-    c.execute(''' CREATE TABLE IF NOT EXISTS notes ( id INTEGER PRIMARY KEY, title TEXT, content TEXT, date_created TEXT, type TEXT DEFAULT 'note' ) ''')
+    c.execute(''' CREATE TABLE IF NOT EXISTS notes (
+                 id INTEGER PRIMARY KEY,
+                 title TEXT,
+                 content TEXT,
+                 date_created TEXT,
+                 type TEXT DEFAULT 'note') ''')
     
     # Таблица персонажей
-    c.execute(''' CREATE TABLE IF NOT EXISTS characters ( id INTEGER PRIMARY KEY, name TEXT UNIQUE, description TEXT, talent_materials TEXT, recommended_artifacts TEXT, recommended_weapon TEXT ) ''')
+    c.execute(''' CREATE TABLE IF NOT EXISTS characters (
+                 id INTEGER PRIMARY KEY,
+                 name TEXT UNIQUE,
+                 description TEXT,
+                 rarity TEXT,
+                 element TEXT,
+                 birthday TEXT,
+                 constellation TEXT,
+                 region TEXT,
+                 type_weapon TEXT,
+                 recommended_artifacts TEXT,
+                 recommended_weapon TEXT) ''')
     
     # Таблица для пунктов списка
-    c.execute(''' CREATE TABLE IF NOT EXISTS list_items ( id INTEGER PRIMARY KEY, parent_note_id INTEGER, text TEXT, completed BOOLEAN DEFAULT FALSE, FOREIGN KEY(parent_note_id) REFERENCES notes(id) ) ''')
+    c.execute(''' CREATE TABLE IF NOT EXISTS list_items (
+                 id INTEGER PRIMARY KEY,
+                 parent_note_id INTEGER,
+                 text TEXT,
+                 completed BOOLEAN DEFAULT FALSE,
+                 FOREIGN KEY(parent_note_id) REFERENCES notes(id)) ''')
     
     conn.commit()
     conn.close()
@@ -40,8 +61,7 @@ def get_all_characters():
     conn.close()
     return results
 
-# --- Новые функции ---
-
+# Функции для работы с элементами списка
 def mark_completed(item_id, completed):
     conn = sqlite3.connect('genshin.db')
     c = conn.cursor()
@@ -64,6 +84,7 @@ def insert_list_item(parent_note_id, text):
     conn.commit()
     conn.close()
 
+# Функция для удаления заметки
 def delete_note(note_id):
     conn = sqlite3.connect('genshin.db')
     c = conn.cursor()
@@ -71,11 +92,12 @@ def delete_note(note_id):
     conn.commit()
     conn.close()
 
-def insert_character(name, description, talent_materials, recommended_artifacts, recommended_weapon):
+# Функция для добавления нового персонажа
+def insert_character(name, description, rarity, element, birthday, constellation, region, type_weapon, recommended_artifacts, recommended_weapon):
     conn = sqlite3.connect('genshin.db')
     c = conn.cursor()
-    c.execute("INSERT INTO characters (name, description, talent_materials, recommended_artifacts, recommended_weapon) VALUES (?, ?, ?, ?, ?)",
-              (name, description, talent_materials, recommended_artifacts, recommended_weapon))
+    c.execute("INSERT INTO characters (name, description, rarity, element, birthday, constellation, region, type_weapon, recommended_artifacts, recommended_weapon) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+              (name, description, rarity, element, birthday, constellation, region, type_weapon, recommended_artifacts, recommended_weapon))
     conn.commit()
     conn.close()
 
