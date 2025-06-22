@@ -1,4 +1,5 @@
 from database import *
+from database import get_all_characters, insert_character  # Импортируем необходимые функции
 
 def populate_characters():
     characters = [
@@ -198,6 +199,12 @@ def populate_characters():
 
     for character in characters:
         insert_character(**character)
+
+# Функция, проверяющая наличие персонажей и добавляющая их при необходимости
+def populate_characters_if_empty():
+    existing_chars = get_all_characters()  # Используем новую функцию
+    if not existing_chars:
+        populate_characters()
 
 if __name__ == "__main__":
     populate_characters()
