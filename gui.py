@@ -222,18 +222,19 @@ class CharactersPage(QWidget):
         self.character_list = QListWidget()
         self.character_list.itemDoubleClicked.connect(self.view_character_details)
         
-        # Получаем список персонажей из базы данных
+        # Загрузка персонажей из базы данных
         characters = get_all_characters()
-        for character in characters:
-            self.character_list.addItem(character[1])  # Показываем только имя персонажа
+        for char in characters:
+            # Используем имя персонажа для отображения
+            self.character_list.addItem(char[1])  # Индексация начинается с 0, поэтому второй элемент - имя персонажа
         
         layout.addWidget(self.character_list)
         self.setLayout(layout)
     
     def view_character_details(self, item):
-        """ Открывает окно с деталями персонажа """
+        """Открывает окно с деталями выбранного персонажа"""
         selected_name = item.text()
-        details = next((ch for ch in get_all_characters() if ch[1] == selected_name), None)
+        details = next((char for char in get_all_characters() if char[1] == selected_name), None)
         if details:
             dialog = CharacterDetailsDialog(details)
             dialog.exec_()
