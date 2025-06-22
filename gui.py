@@ -50,7 +50,8 @@ class EditListDialog(QDialog):
         # Получаем пункты списка
         items = get_list_items(self.note_id)
         for item in items:
-            list_item_widget = ListItemWidget(item["id"], item["text"], item["completed"])
+            # Замена словарного доступа на индексы кортежа
+            list_item_widget = ListItemWidget(item[0], item[1], item[2])
             layout.addWidget(list_item_widget)
         
         add_new_item_button = QPushButton("Добавить новый пункт")
